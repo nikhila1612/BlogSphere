@@ -10,11 +10,11 @@ const Contact = require('../models/Contact');
 router.get('', async (req, res) => {
   try {
     const locals = {
-      title: "NodeJs Blog",
+      title: "BlogSphere",
       description: "Simple Blog created with NodeJs, Express & MongoDb."
     }
 
-    let perPage = 10;
+    let perPage = 5;
     let page = req.query.page || 1;
 
     const data = await Post.aggregate([ { $sort: { createdAt: -1 } } ])
@@ -32,8 +32,7 @@ router.get('', async (req, res) => {
       locals,
       data,
       current: page,
-      nextPage: hasNextPage ? nextPage : null,
-      currentRoute: '/'
+      nextPage: hasNextPage ? nextPage : null
     });
 
   } catch (error) {
@@ -75,8 +74,7 @@ router.get('/post/:id', async (req, res) => {
 
     res.render('post', { 
       locals,
-      data,
-      currentRoute: `/post/${slug}`
+      data
     });
   } catch (error) {
     console.log(error);
@@ -108,8 +106,7 @@ router.post('/search', async (req, res) => {
 
     res.render("search", {
       data,
-      locals,
-      currentRoute: '/'
+      locals
     });
 
   } catch (error) {
@@ -124,12 +121,18 @@ router.post('/search', async (req, res) => {
  * About
 */
 router.get('/about', (req, res) => {
-  res.render('about', {
-    currentRoute: '/about'
-  });
+  const locals={
+    title: "About",
+    description: "Simple Blog created with Nodejs, Express & MOngoDb."
+}
+  res.render('about');
 });
 
 router.get('/contact',(req,res)=>{
+  const locals={
+    title: "Contact",
+    description: "Simple Blog created with Nodejs, Express & MOngoDb."
+}
   res.render("contact",{
       currentRoute:`/contact`
   });
@@ -141,9 +144,7 @@ router.post('/submit-contact',async (req, res) => {
       // Create a new contact instance
       await Contact.create({ name, email, message });
   
-      res.render("contact",{
-          currentRoute:`/contact`
-      });
+      res.render("contact");
   }catch(error){
       console.error('Error sending message:', error);
       res.status(500).send("Error sending message. Avoid using the same mail id or Use another mail id to send message");

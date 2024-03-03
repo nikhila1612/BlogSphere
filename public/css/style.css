@@ -279,7 +279,7 @@ img{
 }
 
 .pagination:hover{
-    color:rgb(236, 236, 236);
+    color:#5a5555;
 }
 footer{
     max-width:982px;
@@ -425,6 +425,17 @@ footer{
 .dashboard-ul:hover{
     text-decoration: underline;
     text-underline-offset: 0.5rem;
+}
+
+.sign-up{
+    font-size: 1rem;
+    cursor:pointer;
+    margin-top:2rem;
+    text-underline-offset: 0.3rem;
+    font-weight: 600;
+}
+.sign-up:hover{
+  color: #5a5555;
 }
 
 @media screen and (max-width:800px){

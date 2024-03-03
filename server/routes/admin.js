@@ -41,7 +41,7 @@ router.get('/admin', async (req, res) => {
       description: "Simple Blog created with NodeJs, Express & MongoDb."
     }
 
-    res.render('admin/index', { locals, layout: adminLayout });
+    res.render('admin/index', { locals, layout: adminLayout});
   } catch (error) {
     console.log(error);
   }
@@ -94,6 +94,7 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
       locals,
       data,
       layout: adminLayout
+  
     });
 
   } catch (error) {
@@ -101,7 +102,28 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
   }
 
 });
+/**
+ * GET /
+ * REGISTER
+*/
+router.get('/register',async (req, res) => {
+  try {
+    const locals = {
+      title: 'Register',
+      description: 'Simple Blog created with NodeJs, Express & MongoDb.'
+    }
 
+    const data = await Post.find();
+    res.render('admin/register', {
+      locals,
+      layout: adminLayout
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+
+});
 /* POST 
 /register - Admin register */
 router.post('/register', async (req, res) => {
@@ -119,7 +141,7 @@ router.post('/register', async (req, res) => {
       try {
           // Create user
           const user = await User.create({ username, password: hashedPassword });
-          res.status(201).json({ message: "User Created", user });
+          res.render('admin');
       } catch (error) {
           // If username is already in use, return conflict
           if (error.code === 11000) {
@@ -170,8 +192,9 @@ router.post('/add-post', authMiddleware, async (req, res) => {
         body: req.body.body
       });
 
-      await Post.create(newPost);
+      await Post.create(newPost);    
       res.redirect('/dashboard');
+     
     } catch (error) {
       console.log(error);
     }
@@ -200,7 +223,7 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
       locals,
       data,
       layout: adminLayout
-    })
+  });
 
   } catch (error) {
     console.log(error);
@@ -222,7 +245,7 @@ router.put('/edit-post/:id', authMiddleware, async (req, res) => {
       updatedAt: Date.now()
     });
 
-    res.redirect(`/edit-post/${req.params.id}`);
+    res.redirect(`/dashboard`);
 
   } catch (error) {
     console.log(error);
@@ -247,29 +270,6 @@ router.put('/edit-post/:id', authMiddleware, async (req, res) => {
 // });
 
 
-/**
- * POST /
- * Admin - Register
-*/
-router.post('/register', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    try {
-      const user = await User.create({ username, password:hashedPassword });
-      res.status(201).json({ message: 'User Created', user });
-    } catch (error) {
-      if(error.code === 11000) {
-        res.status(409).json({ message: 'User already in use'});
-      }
-      res.status(500).json({ message: 'Internal server error'})
-    }
-
-  } catch (error) {
-    console.log(error);
-  }
-});
 
 
 /**
