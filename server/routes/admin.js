@@ -102,6 +102,37 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
 
 });
 
+/* POST 
+/register - Admin register */
+router.post('/register', async (req, res) => {
+  try {
+      // Retrieve username and password from request body
+      const { username, password } = req.body;
+      
+      // Hash password
+      // This line asynchronously hashes the provided password using bcrypt with a cost factor of 10, 
+      // generating a secure hashed representation suitable for storage and verification.
+      // The cost factor in bcrypt refers to the computational effort required to calculate the hash, 
+      // with higher values increasing the time needed to generate the hash, thereby enhancing security against brute-force attacks.
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      try {
+          // Create user
+          const user = await User.create({ username, password: hashedPassword });
+          res.status(201).json({ message: "User Created", user });
+      } catch (error) {
+          // If username is already in use, return conflict
+          if (error.code === 11000) {
+              res.status(409).json({ message: 'User already in use' });
+          }
+          // Otherwise, return internal server error
+          res.status(500).json({ message: 'Internal server error' })
+      }
+
+  } catch (error) {
+      console.log(error);
+  }
+});
 
 /**
  * GET /
