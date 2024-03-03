@@ -7,8 +7,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
-const connectDB = require('./server/config/db');
-const { isActiveRoute } = require('./server/helpers/routeHelpers');
+const connectDB = require('../server/config/db');
+const { isActiveRoute } = require('../server/helpers/routeHelpers');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -42,8 +42,8 @@ app.set('view engine', 'ejs');
 app.locals.isActiveRoute = isActiveRoute; 
 
 
-app.use('/', require('./server/routes/main'));
-app.use('/', require('./server/routes/admin'));
+app.use('/', require('../server/routes/main'));
+app.use('/', require('../server/routes/admin'));
 
 app.listen(PORT, ()=> {
   console.log(`App listening on port ${PORT}`);
